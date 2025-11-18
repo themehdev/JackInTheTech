@@ -68,7 +68,7 @@ public class FirstAuto extends LinearOpMode {
     static final double     FORWARD_SPEED = 0.6;
     static final double     TURN_SPEED    = 0.5;
 
-    @Override
+   // @Override
     public void runOpMode() {
 
         // Initialize the drive system variables.
