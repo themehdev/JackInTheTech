@@ -57,8 +57,8 @@ public class JackInTheTech extends LinearOpMode {
         imu.initialize(
               new IMU.Parameters(
                       new RevHubOrientationOnRobot(
-                              RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                              RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+                              RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                              RevHubOrientationOnRobot.UsbFacingDirection.UP
                       )
 
               )
@@ -83,9 +83,9 @@ public class JackInTheTech extends LinearOpMode {
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
