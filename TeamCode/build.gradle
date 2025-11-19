@@ -29,5 +29,5 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation "com.blazedeveloper:chrono:v0.1.2"
+    implementation "com.blazedeveloper:chrono:v0.2.1"
 }
