@@ -4,15 +4,7 @@ import com.blazedeveloper.chrono.LoggedLinearOpMode;
 import com.blazedeveloper.chrono.Logger;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -47,6 +39,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class JackInTheTech extends LoggedLinearOpMode {
     // Declare OpMode members for each of the 4 motors.
     private DriveBaseSubsystem db_;
+    private IntakeSubsystem intake_;
 
     public JackInTheTech (){
         Logger.addReceiver(new RLOGServer());
@@ -56,18 +49,21 @@ public class JackInTheTech extends LoggedLinearOpMode {
     public void runLoggedOpMode() {
 
         db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap), gamepad1);
+        intake_ = new IntakeSubsystem(new IntakeIOHardware(hardwareMap), gamepad1);
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         db_.updateLogging();
+        intake_.updateLogging();
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (isActive()) {
             preCycle();
-            db_.periodicTeleop();
+            db_.periodicTeleOp();
+            intake_.periodicTeleOp();
             postCycle();
         }
     }

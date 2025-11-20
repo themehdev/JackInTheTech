@@ -34,8 +34,6 @@ import com.blazedeveloper.chrono.Logger;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -63,8 +61,6 @@ public class AutoWTime extends LoggedLinearOpMode {
 
     /* Declare OpMode members. */
     private DriveBaseSubsystem db_;
-
-    private ElapsedTime     runtime = new ElapsedTime();
 
 
     static final double     FORWARD_SPEED = 0.6;
@@ -99,35 +95,36 @@ public class AutoWTime extends LoggedLinearOpMode {
         preCycle();
         db_.updateLogging();
         db_.setDBPowers(1);
-        runtime.reset();
+        resetRuntime();
         postCycle();
-        while (isActive() && (runtime.seconds() < 1.5)) {
+        while (isActive() && (getRuntime() < 0.75)) {
             preCycle();
             db_.updateLogging();
 
-            telemetry.addData("Path", "1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.addData("Path", "1: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }
 
+        
         db_.stop();
-        runtime.reset();
-        while (isActive() && (runtime.seconds() < 1.5)) {
+        resetRuntime();
+        while (isActive() && (getRuntime() < 1.5)) {
             preCycle();
             db_.updateLogging();
 
-            telemetry.addData("Path", "2: %4.1f S Elapsed", runtime.seconds());
+            telemetry.addData("Path", "2: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }
 
         db_.setDBPowers(-1);
-        runtime.reset();
-        while (isActive() && (runtime.seconds() < 1.5)) {
+        resetRuntime();
+        while (isActive() && (getRuntime() < 0.75)) {
             preCycle();
             db_.updateLogging();
 
-            telemetry.addData("Path", "3: %4.1f S Elapsed", runtime.seconds());
+            telemetry.addData("Path", "3: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }

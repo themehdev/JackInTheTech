@@ -10,8 +10,8 @@ public class DriveBaseSubsystem {
 
     private Gamepad gp_;
 
-    public DriveBaseSubsystem (DriveBaseIOHardware dbHardware, Gamepad gp){
-        io_ = dbHardware;
+    public DriveBaseSubsystem (DriveBaseIO io, Gamepad gp){
+        io_ = io;
         gp_ = gp;
 
         inputs_ = new DriveBaseIO.DriveBaseIOInputs();
@@ -43,7 +43,7 @@ public class DriveBaseSubsystem {
         Logger.processInputs("DriveBase", inputs_);
     }
 
-    public void periodicTeleop(){
+    public void periodicTeleOp(){
         updateLogging();
 
         double max;
