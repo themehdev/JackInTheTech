@@ -65,4 +65,8 @@ public interface DriveBaseIO {
     public default void resetYaw(){}
 
     public default void setDBPowers(double frPow, double flPow, double blPow, double brPow){}
+    public default void setDBPowers(double leftPow, double rightPow){}
+    public default void setDBPowers(double pow){}
+
+    public default void stop(){}
 }

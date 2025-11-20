@@ -29,6 +29,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.blazedeveloper.chrono.LoggedLinearOpMode;
+import com.blazedeveloper.chrono.Logger;
+import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
+import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -55,13 +59,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous//(name="CrossLineAuto", group="Robot")
 //@Disabled
-public class AutoWTime extends LinearOpMode {
+public class AutoWTime extends LoggedLinearOpMode {
 
     /* Declare OpMode members. */
-    private DcMotor frontLeftDrive = null;
-    private DcMotor backLeftDrive = null;
-    private DcMotor frontRightDrive = null;
-    private DcMotor backRightDrive = null;
+    private DriveBaseSubsystem db_;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -69,26 +70,25 @@ public class AutoWTime extends LinearOpMode {
     static final double     FORWARD_SPEED = 0.6;
     static final double     TURN_SPEED    = 0.5;
 
-   // @Override
-    public void runOpMode() {
+    public AutoWTime() {
+        Logger.addReceiver(new RLOGServer());
+        Logger.addReceiver(new RLOGWriter());
+    }
 
-        // Initialize the drive system variables.
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+   // @Override
+    public void runLoggedOpMode() {
+
+        db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap));
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
+
+        db_.updateLogging();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -96,15 +96,40 @@ public class AutoWTime extends LinearOpMode {
         // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
 
         // Step 1:  Drive forward for 3 seconds
-        frontLeftDrive.setPower(FORWARD_SPEED);
-        frontRightDrive.setPower(FORWARD_SPEED);
-        backLeftDrive.setPower(FORWARD_SPEED);
-        backRightDrive.setPower(FORWARD_SPEED);
-
+        preCycle();
+        db_.updateLogging();
+        db_.setDBPowers(1);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+        postCycle();
+        while (isActive() && (runtime.seconds() < 1.5)) {
+            preCycle();
+            db_.updateLogging();
+
+            telemetry.addData("Path", "1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
+            postCycle();
+        }
+
+        db_.stop();
+        runtime.reset();
+        while (isActive() && (runtime.seconds() < 1.5)) {
+            preCycle();
+            db_.updateLogging();
+
+            telemetry.addData("Path", "2: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+            postCycle();
+        }
+
+        db_.setDBPowers(-1);
+        runtime.reset();
+        while (isActive() && (runtime.seconds() < 1.5)) {
+            preCycle();
+            db_.updateLogging();
+
+            telemetry.addData("Path", "3: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+            postCycle();
         }
 
         // Step 2:  Spin right for 1.3 seconds
@@ -126,13 +151,16 @@ public class AutoWTime extends LinearOpMode {
 //        }
 
         // Step 4:  Stop
-        frontLeftDrive.setPower(0);
-        frontRightDrive.setPower(0);
-        backRightDrive.setPower(0);
-        backLeftDrive.setPower(0);
+        preCycle();
+        db_.stop();
+        db_.updateLogging();
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+        postCycle();
         sleep(1000);
+        preCycle();
+        db_.updateLogging();
+        postCycle();
     }
 }

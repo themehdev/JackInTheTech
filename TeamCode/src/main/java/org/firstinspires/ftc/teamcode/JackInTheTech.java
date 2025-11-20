@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.blazedeveloper.chrono.LoggedLinearOpMode;
 import com.blazedeveloper.chrono.Logger;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
+import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -49,6 +50,7 @@ public class JackInTheTech extends LoggedLinearOpMode {
 
     public JackInTheTech (){
         Logger.addReceiver(new RLOGServer());
+        Logger.addReceiver(new RLOGWriter());
     }
    
     public void runLoggedOpMode() {
@@ -58,12 +60,14 @@ public class JackInTheTech extends LoggedLinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        db_.updateLogging();
+
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (isActive()) {
             preCycle();
-            db_.periodic();
+            db_.periodicTeleop();
             postCycle();
         }
     }

@@ -17,10 +17,34 @@ public class DriveBaseSubsystem {
         inputs_ = new DriveBaseIO.DriveBaseIOInputs();
     }
 
-    public void periodic(){
+    public DriveBaseSubsystem (DriveBaseIOHardware dbHardware){
+        this(dbHardware, null);
+    }
+
+    public void setDBPowers(double frPow, double flPow, double brPow, double blPow){
+        io_.setDBPowers(frPow, flPow, brPow, blPow);
+    }
+
+    public void setDBPowers(double leftPow, double rightPow){
+        setDBPowers(rightPow, leftPow, leftPow, rightPow);
+    }
+
+    public void setDBPowers(double pow){
+        setDBPowers(pow, pow);
+    }
+
+    public void stop(){
+        setDBPowers(0);
+    }
+
+    public void updateLogging(){
         io_.updateInputs(inputs_);
 
         Logger.processInputs("DriveBase", inputs_);
+    }
+
+    public void periodicTeleop(){
+        updateLogging();
 
         double max;
 
