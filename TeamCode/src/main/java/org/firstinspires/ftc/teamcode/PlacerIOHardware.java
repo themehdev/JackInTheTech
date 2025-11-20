@@ -11,6 +11,10 @@ public class PlacerIOHardware implements PlacerIO{
 
     private Servo pincher_;
 
+    private static double ARM_OFFSET = 0.0;
+
+    private static double PINCHER_OFFSET = 0.0;
+
     public PlacerIOHardware(HardwareMap hardwareMap){
         arm_ = hardwareMap.get(DcMotor.class, "arm");
         pincher_ = hardwareMap.get(Servo.class, "pincher");
@@ -23,12 +27,11 @@ public class PlacerIOHardware implements PlacerIO{
 
     @Override
     public void setArmTargetPos(double degs) {
-
-        arm_.setTargetPosition((int) Math.round(degs*537.7/360));
+        arm_.setTargetPosition((int) Math.round((degs*537.7/360) + ARM_OFFSET));
     }
 
     public void setPincherTargetPos(double pos){
-        pincher_.setPosition(pos);
+        pincher_.setPosition(pos + PINCHER_OFFSET);
     }
 
     public void updateInputs(PlacerIOInputs inputs){
