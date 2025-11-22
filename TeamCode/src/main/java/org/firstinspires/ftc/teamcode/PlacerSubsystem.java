@@ -26,16 +26,21 @@ public class PlacerSubsystem {
     }
 
     public void periodicTeleOp(){
+        updateLogging();
+
         if(gp_.right_trigger > 0.5){
-            io_.setPincherTargetPos(0.1);
+            io_.setPincherTargetPos(-30);
         }else{
             io_.setPincherTargetPos(0);
         }
 
-        if(gp_.left_trigger > 0.5){
-            io_.setArmTargetPos(135);
+        io_.setArmTargetPos(30 * gp_.left_trigger);
+
+
+        if(inputs_.armFinished){
+            io_.setArmPower(0.1);
         }else{
-            io_.setArmTargetPos(0);
+            io_.setArmPower(0.8);
         }
     }
 }

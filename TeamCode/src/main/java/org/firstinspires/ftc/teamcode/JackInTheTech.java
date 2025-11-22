@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class JackInTheTech extends LoggedLinearOpMode {
     // Declare OpMode members for each of the 4 motors.
     private DriveBaseSubsystem db_;
-    private IntakeSubsystem intake_;
+    //private IntakeSubsystem intake_;
     private PlacerSubsystem placer_;
 
     public JackInTheTech (){
@@ -50,14 +50,14 @@ public class JackInTheTech extends LoggedLinearOpMode {
     public void runLoggedOpMode() {
 
         db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap), gamepad1);
-        intake_ = new IntakeSubsystem(new IntakeIOHardware(hardwareMap), gamepad1);
+        //intake_ = new IntakeSubsystem(new IntakeIOHardware(hardwareMap), gamepad1);
         placer_ = new PlacerSubsystem(new PlacerIOHardware(hardwareMap), gamepad1);
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         db_.updateLogging();
-        intake_.updateLogging();
+        //intake_.updateLogging();
         placer_.updateLogging();
 
         waitForStart();
@@ -66,7 +66,7 @@ public class JackInTheTech extends LoggedLinearOpMode {
         while (isActive()) {
             preCycle();
             db_.periodicTeleOp();
-            intake_.periodicTeleOp();
+            //intake_.periodicTeleOp();
             placer_.periodicTeleOp();
             postCycle();
         }

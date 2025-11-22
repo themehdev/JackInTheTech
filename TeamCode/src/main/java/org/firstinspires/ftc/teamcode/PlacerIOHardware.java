@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -9,36 +8,45 @@ public class PlacerIOHardware implements PlacerIO{
 
     private DcMotor arm_;
 
-    private Servo pincher_;
+    private Servo pinch_;
 
-    private static double ARM_OFFSET = 0.0;
+    private static double ARM_OFFSET = 0.0; // should probably stay 0, cuz there isnt an absolute encoder
+    private static double ARM_GEAR_RATIO = 12.5;
 
-    private static double PINCHER_OFFSET = 0.0;
+    private static double PINCH_OFFSET = 50.0;
 
     public PlacerIOHardware(HardwareMap hardwareMap){
-        arm_ = hardwareMap.get(DcMotor.class, "arm");
-        pincher_ = hardwareMap.get(Servo.class, "pincher");
+        arm_ = hardwareMap.get(DcMotor.class, "lift");
+        pinch_ = hardwareMap.get(Servo.class, "grab");
 
         arm_.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        setArmTargetPos(0);
+        arm_.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         arm_.setDirection(DcMotor.Direction.FORWARD);
-        pincher_.setDirection(Servo.Direction.FORWARD);
+        pinch_.setDirection(Servo.Direction.FORWARD);
     }
 
     @Override
     public void setArmTargetPos(double degs) {
-        arm_.setTargetPosition((int) Math.round((degs*537.7/360) + ARM_OFFSET));
+        arm_.setTargetPosition((int) Math.round((((degs + ARM_OFFSET)*537.7/360) * ARM_GEAR_RATIO)));
     }
 
-    public void setPincherTargetPos(double pos){
-        pincher_.setPosition(pos + PINCHER_OFFSET);
+    public void setArmPower(double pow){
+        arm_.setPower(pow);
+    }
+
+    public void setPincherTargetPos(double degs){
+        pinch_.setPosition((degs + PINCH_OFFSET)/300);
     }
 
     public void updateInputs(PlacerIOInputs inputs){
-        inputs.armTarget = arm_.getTargetPosition();
-        inputs.armPos = arm_.getCurrentPosition();
+        inputs.armTarget = ((arm_.getTargetPosition()/ARM_GEAR_RATIO) / (537.7/360)) - ARM_OFFSET;
+        inputs.armPos = ((arm_.getCurrentPosition()/ARM_GEAR_RATIO) / (537.7/360)) - ARM_OFFSET;
         inputs.armPow = arm_.getPower();
+        inputs.armFinished = !arm_.isBusy();
 
-        inputs.pincherPos = pincher_.getPosition();
+        inputs.pinchPos = pinch_.getPosition() * 300 - PINCH_OFFSET;
     }
 }
