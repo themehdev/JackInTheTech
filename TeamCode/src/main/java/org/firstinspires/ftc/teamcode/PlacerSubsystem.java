@@ -70,5 +70,8 @@ public class PlacerSubsystem {
                     state_ = PlacingState.Stowed;
                 }
         }
+        if(gp_.leftBumperWasPressed()){
+            state_ = PlacingState.Stowed;
+        }
     }
 }

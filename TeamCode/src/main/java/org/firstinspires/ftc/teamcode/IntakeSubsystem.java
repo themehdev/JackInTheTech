@@ -32,6 +32,6 @@ public class IntakeSubsystem {
     public void periodicTeleOp(){
         updateLogging();
 
-        io_.setPow(gp_.right_trigger);
+        io_.setPow(gp_.right_trigger - gp_.left_trigger);
     }
 }
