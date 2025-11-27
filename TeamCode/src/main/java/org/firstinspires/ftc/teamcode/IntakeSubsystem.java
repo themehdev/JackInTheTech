@@ -32,12 +32,6 @@ public class IntakeSubsystem {
     public void periodicTeleOp(){
         updateLogging();
 
-        if(gp_.right_bumper){
-            io_.setPow(1);
-        }else if(gp_.left_bumper){
-            io_.setPow(-1);
-        }else{
-            io_.setPow(0);
-        }
+        io_.setPow(gp_.right_trigger);
     }
 }

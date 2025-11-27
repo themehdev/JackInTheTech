@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class IntakeIOHardware implements IntakeIO{
 
-    private CRServo intake_;
+    private DcMotor intake_;
 
     public IntakeIOHardware(HardwareMap hardwareMap){
-        intake_ = hardwareMap.get(CRServo.class, "intake");
+        intake_ = hardwareMap.get(DcMotor.class, "intake");
+
+        intake_.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intake_.setDirection(DcMotorSimple.Direction.FORWARD);
     }
@@ -19,6 +21,7 @@ public class IntakeIOHardware implements IntakeIO{
     @Override
     public void updateInputs(IntakeIOInputs inputs){
         inputs.intakePow = intake_.getPower();
+        inputs.intakePos = intake_.getCurrentPosition();
     }
 
     @Override

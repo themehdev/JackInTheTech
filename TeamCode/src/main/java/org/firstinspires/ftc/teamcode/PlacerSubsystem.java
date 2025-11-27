@@ -5,11 +5,20 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class PlacerSubsystem {
 
+    public enum PlacingState{
+        Stowed,
+        ReadyToPlace,
+        Placing,
+        Releasing
+    }
+
     private PlacerIO io_;
 
     private PlacerIO.PlacerIOInputs inputs_;
 
     private Gamepad gp_;
+
+    private PlacingState state_;
 
     public PlacerSubsystem(PlacerIO io, Gamepad gp){
         io_ = io;
@@ -17,29 +26,49 @@ public class PlacerSubsystem {
         gp_ = gp;
 
         inputs_ = new PlacerIO.PlacerIOInputs();
+
+        state_ = PlacingState.Stowed;
     }
 
     public void updateLogging(){
         io_.updateInputs(inputs_);
 
         Logger.processInputs("placer", inputs_);
+
+        Logger.output("PlacerSubsystem/state", state_.toString());
     }
 
     public void periodicTeleOp(){
         updateLogging();
 
-        if(gp_.right_trigger > 0.5){
-            io_.setPincherTargetPos(-15);
-        }else{
-            io_.setPincherTargetPos(0);
-        }
+        switch(state_){
+            case Stowed:
+                io_.setArmTargetPos(0);
+                io_.setPincherTargetPos(-20);
 
-        io_.setArmTargetPos(150 * gp_.left_trigger);
-
-
-        if(inputs_.armFinished){
-            io_.setArmPower(0.1);
-        }else{
-            io_.setArmPower(0.8);
+                if(gp_.rightBumperWasPressed()){
+                    io_.setPincherTargetPos(10);
+                    io_.setArmTargetPos(180);
+                    state_ = PlacingState.ReadyToPlace;
+                }
+                break;
+            case ReadyToPlace:
+                if(gp_.rightBumperWasPressed()){
+                    io_.setArmTargetPos(210);
+                    state_ = PlacingState.Placing;
+                }
+                break;
+            case Placing:
+                if(Math.abs(inputs_.armPos - inputs_.armTarget) < 5){
+                    io_.setPincherTargetPos(-20);
+                    state_ = PlacingState.Releasing;
+                }
+                break;
+            case Releasing:
+                if(Math.abs(inputs_.pinchPos - inputs_.pinchTarget) < 8){
+                    io_.setArmTargetPos(0);
+                    state_ = PlacingState.Stowed;
+                }
         }
     }
+}

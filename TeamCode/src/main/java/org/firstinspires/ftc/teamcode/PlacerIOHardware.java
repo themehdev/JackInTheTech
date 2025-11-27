@@ -1,14 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.pm.LauncherApps;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.internal.hardware.usb.ArmableUsbDevice;
+
 public class PlacerIOHardware implements PlacerIO{
 
-    private DcMotor arm_;
+    private Servo arm_;
+    private double armTarget_;
 
     private Servo pinch_;
+    private double pinchTarget_;
 
     private static double ARM_OFFSET = 0.0;
     private static double ARM_GEAR_RATIO = 1.0;
@@ -16,36 +22,44 @@ public class PlacerIOHardware implements PlacerIO{
     private static double PINCH_OFFSET = 0.0;
 
     public PlacerIOHardware(HardwareMap hardwareMap){
-        arm_ = hardwareMap.get(DcMotor.class, "arm");
+        arm_ = hardwareMap.get(Servo.class, "arm");
         pinch_ = hardwareMap.get(Servo.class, "pincher");
 
-        arm_.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        setArmTargetPos(0);
-        arm_.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        arm_.setDirection(DcMotor.Direction.FORWARD);
+        arm_.setDirection(Servo.Direction.FORWARD);
         pinch_.setDirection(Servo.Direction.FORWARD);
     }
 
-    public void setArmTargetPos(double degs) {
-        arm_.setTargetPosition((int) Math.round((((degs + ARM_OFFSET)*537.7/360) * ARM_GEAR_RATIO)));
+    private double degsToServo(double degs, double offset, double gearRatio){
+        return (degs + offset) * gearRatio/300;
     }
 
-    public void setArmPower(double pow){
-        arm_.setPower(pow);
+    private double degsToServo(double degs, double offest){
+        return degsToServo(degs, offest, 1);
+    }
+
+    private double servoToDegs(double servo, double offset, double gearRatio){
+        return (servo * 300 + offset)/gearRatio;
+    }
+
+    private double servoToDegs(double servo, double offset){
+        return servoToDegs(servo, offset);
+    }
+
+    public void setArmTargetPos(double degs) {
+        armTarget_ = degs;
+        arm_.setPosition(degsToServo(armTarget_, ARM_OFFSET, ARM_GEAR_RATIO));
     }
 
     public void setPincherTargetPos(double degs){
-        pinch_.setPosition((degs + PINCH_OFFSET)/300);
+        pinchTarget_ = degs;
+        pinch_.setPosition(degsToServo(pinchTarget_, PINCH_OFFSET));
     }
 
     public void updateInputs(PlacerIOInputs inputs){
-        inputs.armTarget = ((arm_.getTargetPosition()/ARM_GEAR_RATIO) / (537.7/360)) - ARM_OFFSET;
-        inputs.armPos = ((arm_.getCurrentPosition()/ARM_GEAR_RATIO) / (537.7/360)) - ARM_OFFSET;
-        inputs.armPow = arm_.getPower();
-        inputs.armFinished = !arm_.isBusy();
+        inputs.armPos = servoToDegs(arm_.getPosition(), ARM_OFFSET, ARM_GEAR_RATIO);
+        inputs.armTarget = armTarget_;
 
-        inputs.pinchPos = pinch_.getPosition() * 300 - PINCH_OFFSET;
+        inputs.pinchPos = servoToDegs(pinch_.getPosition(), PINCH_OFFSET);
+        inputs.pinchTarget = pinchTarget_;
     }
 }
