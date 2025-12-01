@@ -34,7 +34,6 @@ import com.blazedeveloper.chrono.Logger;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
  * This OpMode illustrates the concept of driving a path based on time.
@@ -62,6 +61,8 @@ public class AutoWTime extends LoggedLinearOpMode {
     /* Declare OpMode members. */
     private DriveBaseSubsystem db_;
 
+    private PlacerSubsystem placer_;
+
 
     static final double     FORWARD_SPEED = 0.6;
     static final double     TURN_SPEED    = 0.5;
@@ -75,6 +76,7 @@ public class AutoWTime extends LoggedLinearOpMode {
     public void runLoggedOpMode() {
 
         db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap));
+        placer_ = new PlacerSubsystem(new PlacerIOHardware(hardwareMap));
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -85,46 +87,77 @@ public class AutoWTime extends LoggedLinearOpMode {
         telemetry.update();
 
         db_.updateLogging();
+        placer_.updateLogging();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
 
         // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
-
-        // Step 1:  Drive forward for 3 seconds
         preCycle();
         db_.updateLogging();
-        db_.setDBPowers(1);
-        resetRuntime();
+        placer_.updateLogging();
+        db_.setDBPowers(-0.5, 0.5);
+        placer_.setState(PlacerSubsystem.PlacingState.Stowed);
         postCycle();
-        while (isActive() && (getRuntime() < 0.75)) {
+        while(isActive() && db_.getIMU() < 55 * Math.PI/180){
             preCycle();
             db_.updateLogging();
+            placer_.updateLogging();
+            placer_.runState();
+            telemetry.addData("Path", "Turning: %4.1f S Elapsed", getRuntime());
+            telemetry.update();
+            postCycle();
+        }
+        preCycle();
+        db_.setDBPowers(0);
+        db_.updateLogging();
+        placer_.updateLogging();
+        postCycle();
 
-            telemetry.addData("Path", "1: %4.1f S Elapsed", getRuntime());
+        sleep(250);
+        
+        preCycle();
+        db_.updateLogging();
+        placer_.updateLogging();
+        db_.setDBPowers(0.5);
+        placer_.setState(PlacerSubsystem.PlacingState.ReadyToPlace);
+        resetRuntime();
+        postCycle();
+        while (isActive() && (getRuntime() < 1.5)) {
+            preCycle();
+            db_.updateLogging();
+            placer_.updateLogging();
+            placer_.runState();
+            telemetry.addData("Path", "Forward: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }
 
-        
+
+        preCycle();
+        db_.updateLogging();
+        placer_.updateLogging();
         db_.stop();
+        placer_.setState(PlacerSubsystem.PlacingState.Placing);
+        resetRuntime();
+        postCycle();
+        while (isActive() && !placer_.getState().equals(PlacerSubsystem.PlacingState.Stowed)) {
+            preCycle();
+            db_.updateLogging();
+            placer_.updateLogging();
+            placer_.runState();
+            telemetry.addData("Path", "Placing: %4.1f S Elapsed", getRuntime());
+            telemetry.update();
+            postCycle();
+        }
+
+        db_.setDBPowers(-0.5);
         resetRuntime();
         while (isActive() && (getRuntime() < 1.5)) {
             preCycle();
             db_.updateLogging();
 
-            telemetry.addData("Path", "2: %4.1f S Elapsed", getRuntime());
-            telemetry.update();
-            postCycle();
-        }
-
-        db_.setDBPowers(-1);
-        resetRuntime();
-        while (isActive() && (getRuntime() < 0.75)) {
-            preCycle();
-            db_.updateLogging();
-
-            telemetry.addData("Path", "3: %4.1f S Elapsed", getRuntime());
+            telemetry.addData("Path", "Back: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }

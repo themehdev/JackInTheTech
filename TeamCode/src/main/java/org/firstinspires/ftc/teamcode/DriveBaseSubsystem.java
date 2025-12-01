@@ -43,6 +43,10 @@ public class DriveBaseSubsystem {
         Logger.processInputs("DriveBase", inputs_);
     }
 
+    public double getIMU(){
+        return inputs_.imuYawRad;
+    }
+
     public void periodicTeleOp(){
         updateLogging();
 
