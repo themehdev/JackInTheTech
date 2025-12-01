@@ -54,8 +54,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous//(name="CrossLineAuto", group="Robot")
-//@Disabled
+//(name="CrossLineAuto", group="Robot"
 public class AutoWTime extends LoggedLinearOpMode {
 
     /* Declare OpMode members. */
@@ -63,13 +62,14 @@ public class AutoWTime extends LoggedLinearOpMode {
 
     private PlacerSubsystem placer_;
 
+    private double startingTurnAngle_;
+    
 
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
-
-    public AutoWTime() {
+    public AutoWTime(double startingTurnAngle) {
         Logger.addReceiver(new RLOGServer());
         Logger.addReceiver(new RLOGWriter());
+
+        startingTurnAngle_ = startingTurnAngle;
     }
 
    // @Override
@@ -99,7 +99,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         db_.setDBPowers(-0.5, 0.5);
         placer_.setState(PlacerSubsystem.PlacingState.Stowed);
         postCycle();
-        while(isActive() && db_.getIMU() < 55 * Math.PI/180){
+        while(isActive() && db_.getIMU() < startingTurnAngle_ * Math.PI/180){
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
