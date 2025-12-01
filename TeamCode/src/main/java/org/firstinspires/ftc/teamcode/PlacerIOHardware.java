@@ -15,7 +15,7 @@ public class PlacerIOHardware implements PlacerIO{
     private static double ARM_OFFSET = 0.0; // should probably stay 0, cuz there isnt an absolute encoder
     private static double ARM_GEAR_RATIO = 12.5;
 
-    private static double PINCH_OFFSET = 50.0;
+    private static double PINCH_OFFSET = 40.0;
 
     public PlacerIOHardware(HardwareMap hardwareMap){
         arm_ = hardwareMap.get(DcMotor.class, "lift");
