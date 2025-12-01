@@ -10,6 +10,8 @@ public class PlacerIOHardware implements PlacerIO{
 
     private Servo pinch_;
 
+    private double pinchTarget_ = 0.0;
+
     private static double ARM_OFFSET = 0.0; // should probably stay 0, cuz there isnt an absolute encoder
     private static double ARM_GEAR_RATIO = 12.5;
 
@@ -38,7 +40,8 @@ public class PlacerIOHardware implements PlacerIO{
     }
 
     public void setPincherTargetPos(double degs){
-        pinch_.setPosition((degs + PINCH_OFFSET)/300);
+        pinchTarget_ = degs;
+        pinch_.setPosition((pinchTarget_ + PINCH_OFFSET)/300);
     }
 
     public void updateInputs(PlacerIOInputs inputs){
@@ -48,5 +51,6 @@ public class PlacerIOHardware implements PlacerIO{
         inputs.armFinished = !arm_.isBusy();
 
         inputs.pinchPos = pinch_.getPosition() * 300 - PINCH_OFFSET;
+        inputs.pinchTarget = pinchTarget_;
     }
 }

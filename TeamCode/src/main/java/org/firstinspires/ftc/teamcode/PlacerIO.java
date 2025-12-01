@@ -16,6 +16,7 @@ public interface PlacerIO {
         boolean armFinished = true;
 
         double pinchPos = 0.0;
+        double pinchTarget = 0.0;
 
         @Override
         public void toLog(@NonNull LogTable logTable) {
@@ -25,6 +26,7 @@ public interface PlacerIO {
             logTable.put("arm/finished", armFinished);
 
             logTable.put("pincher/pos", pinchPos);
+            logTable.put("pincher/target", pinchTarget);
         }
 
         public void fromLog(@NonNull LogTable logTable) {
@@ -34,6 +36,7 @@ public interface PlacerIO {
             armFinished = logTable.get("arm/finished", armFinished);
 
             pinchPos = logTable.get("pincher/pos", pinchPos);
+            pinchTarget = logTable.get("pincher/target", pinchTarget);
         }
     }
 
