@@ -7,6 +7,7 @@ public class PlacerSubsystem {
 
     public enum PlacingState{
         Stowed,
+        Collecting,
         ReadyToPlace,
         Placing,
         Releasing
@@ -20,6 +21,8 @@ public class PlacerSubsystem {
 
     private PlacingState state_;
 
+    private double timer_;
+
     public PlacerSubsystem(PlacerIO io, Gamepad gp){
         io_ = io;
 
@@ -28,6 +31,8 @@ public class PlacerSubsystem {
         inputs_ = new PlacerIO.PlacerIOInputs();
 
         state_ = PlacingState.Stowed;
+
+        timer_ = 0.0;
     }
 
     public PlacerSubsystem(PlacerIO io){
@@ -56,6 +61,11 @@ public class PlacerSubsystem {
                 io_.setArmTargetPos(0);
                 io_.setPincherTargetPos(-20);
                 break;
+            case Collecting:
+                io_.setArmTargetPos(0);
+                io_.setPincherTargetPos(10);
+
+
             case ReadyToPlace:
                 io_.setPincherTargetPos(10);
                 io_.setArmTargetPos(180);
@@ -80,7 +90,7 @@ public class PlacerSubsystem {
         switch(state_){
             case Stowed:
                 if(gp_.rightBumperWasPressed()){
-                    state_ = PlacingState.ReadyToPlace;
+                    state_ = PlacingState.Collecting;
                 }
                 break;
             case ReadyToPlace:
