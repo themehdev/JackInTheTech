@@ -1,31 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.content.pm.LauncherApps;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.internal.hardware.usb.ArmableUsbDevice;
-
 public class PlacerIOHardware implements PlacerIO{
 
-    private Servo arm_;
+    private CRServo arm_;
     private double armTarget_;
 
     private Servo pinch_;
     private double pinchTarget_;
 
     private static double ARM_OFFSET = 0.0;
-    private static double ARM_GEAR_RATIO = 1.0;
+    private static double ARM_GEAR_RATIO = 5.0;
 
     private static double PINCH_OFFSET = 0.0;
 
     public PlacerIOHardware(HardwareMap hardwareMap){
-        arm_ = hardwareMap.get(Servo.class, "arm");
-        pinch_ = hardwareMap.get(Servo.class, "pincher");
+        arm_ = hardwareMap.get(CRServo.class, "arm");
+        pinch_ = hardwareMap.get(Servo.class, "pinch");
 
-        arm_.setDirection(Servo.Direction.FORWARD);
+        arm_.setDirection(CRServo.Direction.FORWARD);
         pinch_.setDirection(Servo.Direction.FORWARD);
     }
 
@@ -45,9 +41,9 @@ public class PlacerIOHardware implements PlacerIO{
         return servoToDegs(servo, offset);
     }
 
-    public void setArmTargetPos(double degs) {
-        armTarget_ = degs;
-        arm_.setPosition(degsToServo(armTarget_, ARM_OFFSET, ARM_GEAR_RATIO));
+    public void setArmTargetVel(double pow) {
+        armTarget_ = pow;
+        arm_.setPower(pow);
     }
 
     public void setPincherTargetPos(double degs){
@@ -56,7 +52,7 @@ public class PlacerIOHardware implements PlacerIO{
     }
 
     public void updateInputs(PlacerIOInputs inputs){
-        inputs.armPos = servoToDegs(arm_.getPosition(), ARM_OFFSET, ARM_GEAR_RATIO);
+        inputs.armPow = arm_.getPower();
         inputs.armTarget = armTarget_;
 
         inputs.pinchPos = servoToDegs(pinch_.getPosition(), PINCH_OFFSET);

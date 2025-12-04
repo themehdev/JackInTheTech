@@ -5,21 +5,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class PlacerSubsystem {
 
-    public enum PlacingState{
-        Stowed,
-        Collecting,
-        ReadyToPlace,
-        Placing,
-        Releasing
-    }
-
     private PlacerIO io_;
 
     private PlacerIO.PlacerIOInputs inputs_;
 
     private Gamepad gp_;
 
-    private PlacingState state_;
+    private boolean grabbing_;
 
     private double timer_;
 
@@ -30,9 +22,12 @@ public class PlacerSubsystem {
 
         inputs_ = new PlacerIO.PlacerIOInputs();
 
-        state_ = PlacingState.Stowed;
+        grabbing_ = false;
 
         timer_ = 0.0;
+
+        io_.setArmTargetVel(0.0);
+        io_.setPincherTargetPos(0.0);
     }
 
     public PlacerSubsystem(PlacerIO io){
@@ -44,66 +39,22 @@ public class PlacerSubsystem {
 
         Logger.processInputs("placer", inputs_);
 
-        Logger.output("PlacerSubsystem/state", state_.toString());
-    }
-
-    public void setState(PlacingState state) {
-        state_ = state;
-    }
-
-    public PlacingState getState() {
-        return state_;
-    }
-
-    public void runState(){
-        switch(state_){
-            case Stowed:
-                io_.setArmTargetPos(0);
-                io_.setPincherTargetPos(-20);
-                break;
-            case Collecting:
-                io_.setArmTargetPos(0);
-                io_.setPincherTargetPos(10);
-
-
-            case ReadyToPlace:
-                io_.setPincherTargetPos(10);
-                io_.setArmTargetPos(180);
-                break;
-            case Placing:
-                io_.setArmTargetPos(210);
-                if(Math.abs(inputs_.armPos - inputs_.armTarget) < 5){
-                    state_ = PlacingState.Releasing;
-                }
-                break;
-            case Releasing:
-                io_.setPincherTargetPos(-20);
-                if(Math.abs(inputs_.pinchPos - inputs_.pinchTarget) < 8){
-                    state_ = PlacingState.Stowed;
-                }
-        }
+        Logger.output("PlacerSubsystem/grabbing", grabbing_);
     }
 
     public void periodicTeleOp(){
         updateLogging();
 
-        switch(state_){
-            case Stowed:
-                if(gp_.rightBumperWasPressed()){
-                    state_ = PlacingState.Collecting;
-                }
-                break;
-            case ReadyToPlace:
-                if(gp_.rightBumperWasPressed()){
-                    state_ = PlacingState.Placing;
-                }
-                break;
+        if(grabbing_){
+            io_.setPincherTargetPos(-5);
+        }else{
+            io_.setPincherTargetPos(55);
         }
-
-        runState();
 
         if(gp_.leftBumperWasPressed()){
-            state_ = PlacingState.Stowed;
+            grabbing_ = !grabbing_;
         }
+
+        io_.setArmTargetVel(gp_.right_trigger - gp_.left_trigger);
     }
 }

@@ -9,7 +9,7 @@ public interface PlacerIO {
 
     public class PlacerIOInputs implements LoggableInputs {
 
-        double armPos = 0.0;
+        double armPow = 0.0;
         double armTarget = 0.0;
 
 
@@ -20,7 +20,7 @@ public interface PlacerIO {
 
         @Override
         public void toLog(@NonNull LogTable logTable) {
-            logTable.put("arm/pos", armPos);
+            logTable.put("arm/pos", armPow);
             logTable.put("arm/target", armTarget);
 
             logTable.put("pincher/pos", pinchPos);
@@ -28,7 +28,7 @@ public interface PlacerIO {
         }
 
         public void fromLog(@NonNull LogTable logTable) {
-            armPos = logTable.get("arm/pos", armPos);
+            armPow = logTable.get("arm/pos", armPow);
             armTarget = logTable.get("arm/target", armTarget);
 
             pinchPos = logTable.get("pincher/pos", pinchPos);
@@ -40,5 +40,5 @@ public interface PlacerIO {
 
     public default void setPincherTargetPos(double pos){}
 
-    public default void setArmTargetPos(double pos){}
+    public default void setArmTargetVel(double vel){}
 }
