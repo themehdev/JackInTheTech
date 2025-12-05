@@ -97,13 +97,13 @@ public class AutoWTime extends LoggedLinearOpMode {
         db_.updateLogging();
         placer_.updateLogging();
         db_.setDBPowers(-0.5, 0.5);
-        placer_.setState(PlacerSubsystem.PlacingState.Stowed);
+        placer_.setGrabbing(true);
         postCycle();
         while(isActive() && db_.getIMU() < startingTurnAngle_ * Math.PI/180){
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
-            placer_.runState();
+            placer_.runGrabber();
             telemetry.addData("Path", "Turning: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
@@ -120,14 +120,14 @@ public class AutoWTime extends LoggedLinearOpMode {
         db_.updateLogging();
         placer_.updateLogging();
         db_.setDBPowers(0.5);
-        placer_.setState(PlacerSubsystem.PlacingState.ReadyToPlace);
+        placer_.setArmTargetVel(0);
         resetRuntime();
         postCycle();
         while (isActive() && (getRuntime() < 1.5)) {
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
-            placer_.runState();
+            placer_.runGrabber();
             telemetry.addData("Path", "Forward: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
@@ -138,18 +138,20 @@ public class AutoWTime extends LoggedLinearOpMode {
         db_.updateLogging();
         placer_.updateLogging();
         db_.stop();
-        placer_.setState(PlacerSubsystem.PlacingState.Placing);
+        placer_.setArmTargetVel(1);
         resetRuntime();
         postCycle();
-        while (isActive() && !placer_.getState().equals(PlacerSubsystem.PlacingState.Stowed)) {
+        while (isActive() && getRuntime() < 1.5) {
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
-            placer_.runState();
+            placer_.runGrabber();
             telemetry.addData("Path", "Placing: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }
+
+        placer_.setArmTargetVel(0);
 
         db_.setDBPowers(-0.5);
         resetRuntime();

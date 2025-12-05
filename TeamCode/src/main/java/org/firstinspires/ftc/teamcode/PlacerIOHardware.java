@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.blazedeveloper.chrono.Logger;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class PlacerIOHardware implements PlacerIO{
 
@@ -12,10 +15,7 @@ public class PlacerIOHardware implements PlacerIO{
     private Servo pinch_;
     private double pinchTarget_;
 
-    private static double ARM_OFFSET = 0.0;
-    private static double ARM_GEAR_RATIO = 5.0;
-
-    private static double PINCH_OFFSET = 0.0;
+    private static double PINCH_OFFSET = -90.0;
 
     public PlacerIOHardware(HardwareMap hardwareMap){
         arm_ = hardwareMap.get(CRServo.class, "arm");
@@ -23,6 +23,8 @@ public class PlacerIOHardware implements PlacerIO{
 
         arm_.setDirection(CRServo.Direction.FORWARD);
         pinch_.setDirection(Servo.Direction.FORWARD);
+
+        //pinch_.setPosition(degsToServo(0, PINCH_OFFSET));
     }
 
     private double degsToServo(double degs, double offset, double gearRatio){
@@ -38,7 +40,7 @@ public class PlacerIOHardware implements PlacerIO{
     }
 
     private double servoToDegs(double servo, double offset){
-        return servoToDegs(servo, offset);
+        return servoToDegs(servo, offset, 1);
     }
 
     public void setArmTargetVel(double pow) {
@@ -49,6 +51,8 @@ public class PlacerIOHardware implements PlacerIO{
     public void setPincherTargetPos(double degs){
         pinchTarget_ = degs;
         pinch_.setPosition(degsToServo(pinchTarget_, PINCH_OFFSET));
+
+        Logger.output("moving pinch", true);
     }
 
     public void updateInputs(PlacerIOInputs inputs){

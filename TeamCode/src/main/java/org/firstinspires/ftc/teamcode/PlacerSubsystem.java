@@ -25,9 +25,6 @@ public class PlacerSubsystem {
         grabbing_ = false;
 
         timer_ = 0.0;
-
-        io_.setArmTargetVel(0.0);
-        io_.setPincherTargetPos(0.0);
     }
 
     public PlacerSubsystem(PlacerIO io){
@@ -42,14 +39,26 @@ public class PlacerSubsystem {
         Logger.output("PlacerSubsystem/grabbing", grabbing_);
     }
 
+    public void setGrabbing(boolean grabbing){
+        grabbing_ = grabbing;
+    }
+
+    public void runGrabber(){
+        if(grabbing_){
+            io_.setPincherTargetPos(5);
+        }else{
+            io_.setPincherTargetPos(-20);
+        }
+    }
+
+    public void setArmTargetVel(double vel){
+        io_.setArmTargetVel(vel);
+    }
+
     public void periodicTeleOp(){
         updateLogging();
 
-        if(grabbing_){
-            io_.setPincherTargetPos(-5);
-        }else{
-            io_.setPincherTargetPos(55);
-        }
+        runGrabber();
 
         if(gp_.leftBumperWasPressed()){
             grabbing_ = !grabbing_;
