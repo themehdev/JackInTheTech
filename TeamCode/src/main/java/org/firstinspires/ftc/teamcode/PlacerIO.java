@@ -16,8 +16,6 @@ public interface PlacerIO {
         double pinchPos = 0.0;
         double pinchTarget = 0.0;
 
-        PlacerSubsystem.PlacingState state = PlacerSubsystem.PlacingState.Stowed;
-
         @Override
         public void toLog(@NonNull LogTable logTable) {
             logTable.put("arm/pos", armPow);
@@ -29,7 +27,7 @@ public interface PlacerIO {
 
         public void fromLog(@NonNull LogTable logTable) {
             armPow = logTable.get("arm/pos", armPow);
-            armTarget = logTable.get("arm/target", armTarget);
+            armTarget = logTable.get("arm/targetVel", armTarget);
 
             pinchPos = logTable.get("pincher/pos", pinchPos);
             pinchTarget = logTable.get("pincher/target", pinchTarget);
