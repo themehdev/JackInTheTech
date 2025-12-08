@@ -96,7 +96,8 @@ public class AutoWTime extends LoggedLinearOpMode {
         preCycle();
         db_.updateLogging();
         placer_.updateLogging();
-        db_.setDBPowers(-0.5, 0.5);
+        double turnPower = startingTurnAngle_ < 0 ? -0.5 : 0.5;
+        db_.setDBPowers(turnPower, -turnPower);
         placer_.setGrabbing(true);
         postCycle();
         while(isActive() && db_.getIMU() < startingTurnAngle_ * Math.PI/180){
@@ -119,7 +120,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         preCycle();
         db_.updateLogging();
         placer_.updateLogging();
-        db_.setDBPowers(0.5);
+        db_.setDBPowers(-0.5);
         placer_.setArmTargetVel(0);
         resetRuntime();
         postCycle();
@@ -141,7 +142,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         placer_.setArmTargetVel(1);
         resetRuntime();
         postCycle();
-        while (isActive() && getRuntime() < 1.5) {
+        while (isActive() && getRuntime() < 2.8) {
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
@@ -153,7 +154,7 @@ public class AutoWTime extends LoggedLinearOpMode {
 
         placer_.setArmTargetVel(0);
 
-        db_.setDBPowers(-0.5);
+        db_.setDBPowers(0.5);
         resetRuntime();
         while (isActive() && (getRuntime() < 1.5)) {
             preCycle();

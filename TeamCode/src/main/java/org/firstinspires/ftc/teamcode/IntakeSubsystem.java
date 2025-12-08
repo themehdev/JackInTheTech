@@ -32,6 +32,6 @@ public class IntakeSubsystem {
     public void periodicTeleOp(){
         updateLogging();
 
-        io_.setPow(gp_.right_bumper ? 0.5 : (gp_.square ? -0.5 : 0));
+        io_.setPow(gp_.right_bumper ? 0.75 : (gp_.square ? -0.75 : 0));
     }
 }
