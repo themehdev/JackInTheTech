@@ -45,14 +45,18 @@ public class PlacerSubsystem {
 
     public void runGrabber(){
         if(grabbing_){
-            io_.setPincherTargetPos(5);
+            io_.setPincherTargetPow(0.5);
         }else{
-            io_.setPincherTargetPos(-20);
+            if(timer_ > Logger.timestamp()){
+                io_.setPincherTargetPow(-1.0);
+            }else{
+                io_.setPincherTargetPow(0.0);
+            }
         }
     }
 
     public void setArmTargetVel(double vel){
-        io_.setArmTargetVel(vel);
+        io_.setArmTargetPow(vel);
     }
 
     public void periodicTeleOp(){
@@ -62,8 +66,9 @@ public class PlacerSubsystem {
 
         if(gp_.leftBumperWasPressed()){
             grabbing_ = !grabbing_;
+            timer_ = Logger.timestamp() + 250_000_000;
         }
 
-        io_.setArmTargetVel(gp_.right_trigger - gp_.left_trigger);
+        io_.setArmTargetPow(gp_.right_trigger - gp_.left_trigger);
     }
 }

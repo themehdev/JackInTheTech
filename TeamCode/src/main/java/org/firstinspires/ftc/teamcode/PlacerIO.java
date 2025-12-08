@@ -13,30 +13,30 @@ public interface PlacerIO {
         double armTarget = 0.0;
 
 
-        double pinchPos = 0.0;
+        double pinchPow = 0.0;
         double pinchTarget = 0.0;
 
         @Override
         public void toLog(@NonNull LogTable logTable) {
-            logTable.put("arm/pos", armPow);
+            logTable.put("arm/pow", armPow);
             logTable.put("arm/target", armTarget);
 
-            logTable.put("pincher/pos", pinchPos);
+            logTable.put("pincher/pow", pinchPow);
             logTable.put("pincher/target", pinchTarget);
         }
 
         public void fromLog(@NonNull LogTable logTable) {
-            armPow = logTable.get("arm/pos", armPow);
+            armPow = logTable.get("arm/pow", armPow);
             armTarget = logTable.get("arm/targetVel", armTarget);
 
-            pinchPos = logTable.get("pincher/pos", pinchPos);
-            pinchTarget = logTable.get("pincher/target", pinchTarget);
+            pinchPow = logTable.get("pincher/pow", pinchPow);
+            pinchTarget = logTable.get("pincher/targetVel", pinchTarget);
         }
     }
 
     public default void updateInputs(PlacerIOInputs inputs){}
 
-    public default void setPincherTargetPos(double pos){}
+    public default void setPincherTargetPow(double vel){}
 
-    public default void setArmTargetVel(double vel){}
+    public default void setArmTargetPow(double vel){}
 }
