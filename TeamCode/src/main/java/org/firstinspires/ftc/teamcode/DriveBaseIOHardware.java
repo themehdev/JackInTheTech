@@ -38,8 +38,8 @@ public class DriveBaseIOHardware implements DriveBaseIO{
         imu_.initialize(
                 new IMU.Parameters(
                         new RevHubOrientationOnRobot(
-                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
+                                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
                         )
 
                 )

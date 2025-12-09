@@ -66,7 +66,7 @@ public class PlacerSubsystem {
 
         if(gp_.leftBumperWasPressed()){
             grabbing_ = !grabbing_;
-            timer_ = Logger.timestamp() + 250_000_000;
+            timer_ = Logger.timestamp() + 175_000_000;
         }
 
         io_.setArmTargetPow(gp_.right_trigger - gp_.left_trigger);

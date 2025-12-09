@@ -124,7 +124,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         placer_.setArmTargetVel(0);
         resetRuntime();
         postCycle();
-        while (isActive() && (getRuntime() < 1.5)) {
+        while (isActive() && (getRuntime() < (2 + (startingTurnAngle_ - 30)/20))) {
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
@@ -156,7 +156,7 @@ public class AutoWTime extends LoggedLinearOpMode {
 
         db_.setDBPowers(0.5);
         resetRuntime();
-        while (isActive() && (getRuntime() < 1.5)) {
+        while (isActive() && (getRuntime() < (2 + (startingTurnAngle_ - 30)/20))) {
             preCycle();
             db_.updateLogging();
 

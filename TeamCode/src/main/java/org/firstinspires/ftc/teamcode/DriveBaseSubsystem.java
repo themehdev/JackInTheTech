@@ -54,6 +54,9 @@ public class DriveBaseSubsystem {
 
         if(gp_.triangle && gp_.circle) {
             io_.resetYaw();
+            Logger.output("resettingYaw", true);
+        }else{
+            Logger.output("resettingYaw", false);
         }
 
         double gpAngleRad = Math.atan2(-gp_.left_stick_y, gp_.left_stick_x);
