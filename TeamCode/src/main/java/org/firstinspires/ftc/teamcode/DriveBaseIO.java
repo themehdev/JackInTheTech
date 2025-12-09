@@ -24,6 +24,8 @@ public interface DriveBaseIO {
         double blPow = 0.0;
 
         double imuYawRad = 0.0;
+        double imuPitchRad = 0.0;
+        double imuRollRad = 0.0;
 
         @Override
         public void toLog(@NonNull LogTable logTable) {
@@ -40,6 +42,8 @@ public interface DriveBaseIO {
             logTable.put("bl/Pow", blPow);
 
             logTable.put("imuYawRad", imuYawRad);
+            logTable.put("imuPitchRad", imuPitchRad);
+            logTable.put("imuRollRad", imuRollRad);
         }
 
         @Override
@@ -57,6 +61,8 @@ public interface DriveBaseIO {
             blPow = logTable.get("bl/Pow", blPow);
 
             imuYawRad = logTable.get("imuYawRad", imuYawRad);
+            imuPitchRad = logTable.get("imuPitchRad", imuPitchRad);
+            imuRollRad = logTable.get("imuRollRad", imuRollRad);
         }
     }
 

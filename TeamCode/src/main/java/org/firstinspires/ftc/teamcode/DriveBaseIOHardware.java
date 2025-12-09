@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class DriveBaseIOHardware implements DriveBaseIO{
 
@@ -38,7 +39,7 @@ public class DriveBaseIOHardware implements DriveBaseIO{
         imu_.initialize(
                 new IMU.Parameters(
                         new RevHubOrientationOnRobot(
-                                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
                         )
 
@@ -46,6 +47,7 @@ public class DriveBaseIOHardware implements DriveBaseIO{
         );
 
         imu_.resetYaw();
+
     }
 
     public void setDBPowers(double frPow, double flPow, double blPow, double brPow){
@@ -76,6 +78,9 @@ public class DriveBaseIOHardware implements DriveBaseIO{
         inputs.frPow = fr_.getPower();
 
         inputs.imuYawRad = imu_.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        inputs.imuPitchRad = imu_.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS);
+        inputs.imuRollRad = imu_.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS);
+        //imu_.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD)))
     }
 
 
