@@ -35,6 +35,8 @@ import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import kotlin.math.UMathKt;
+
 /*
  * This OpMode illustrates the concept of driving a path based on time.
  * The code is structured as a LinearOpMode
@@ -96,11 +98,11 @@ public class AutoWTime extends LoggedLinearOpMode {
         preCycle();
         db_.updateLogging();
         placer_.updateLogging();
-        double turnPower = startingTurnAngle_ < 0 ? -0.5 : 0.5;
+        double turnPower = startingTurnAngle_ > 0 ? -0.5 : 0.5;
         db_.setDBPowers(turnPower, -turnPower);
         placer_.setGrabbing(true);
         postCycle();
-        while(isActive() && db_.getIMU() < startingTurnAngle_ * Math.PI/180){
+        while(isActive() && Math.abs(db_.getIMU()) < Math.abs(startingTurnAngle_ * Math.PI/180)){
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
@@ -124,7 +126,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         placer_.setArmTargetVel(0);
         resetRuntime();
         postCycle();
-        while (isActive() && (getRuntime() < (2 + (startingTurnAngle_ - 30)/20))) {
+        while (isActive() && (getRuntime() < 2)) {
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
@@ -156,7 +158,7 @@ public class AutoWTime extends LoggedLinearOpMode {
 
         db_.setDBPowers(0.5);
         resetRuntime();
-        while (isActive() && (getRuntime() < (2 + (startingTurnAngle_ - 30)/20))) {
+        while (isActive() && (getRuntime() < 2)) {
             preCycle();
             db_.updateLogging();
 
