@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class RightAuto1 extends AutoWTime{
 
     public RightAuto1(){
-        super(-45.0);
+        super(-39.8);
     }
 
     @Override

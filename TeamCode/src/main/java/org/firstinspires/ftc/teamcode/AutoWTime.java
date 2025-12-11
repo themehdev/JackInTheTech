@@ -126,7 +126,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         placer_.setArmTargetVel(0);
         resetRuntime();
         postCycle();
-        while (isActive() && (getRuntime() < 2)) {
+        while (isActive() && (getRuntime() < 2.1)) {
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
