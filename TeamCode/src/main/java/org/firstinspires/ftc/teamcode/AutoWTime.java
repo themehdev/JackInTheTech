@@ -144,7 +144,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         placer_.setArmTargetVel(1);
         resetRuntime();
         postCycle();
-        while (isActive() && getRuntime() < 4) {
+        while (isActive() && getRuntime() < 4.5) {
             preCycle();
             db_.updateLogging();
             placer_.updateLogging();
@@ -153,11 +153,23 @@ public class AutoWTime extends LoggedLinearOpMode {
             telemetry.update();
             postCycle();
         }
+        preCycle();
         placer_.setGrabbing(false);
         placer_.runGrabber();
+        placer_.updateLogging();
+        resetRuntime();
+        postCycle();
+        while (isActive() && getRuntime() < 0.5){
+            preCycle();
+            db_.updateLogging();
+            placer_.updateLogging();
+            placer_.runGrabber();
+            telemetry.addData("Path", "Releasing: %4.1f S Elapsed", getRuntime());
+            telemetry.update();
+            postCycle();
+        }
 
         placer_.setArmTargetVel(-1);
-
         db_.setDBPowers(0.5);
         resetRuntime();
         while (isActive() && (getRuntime() < 2)) {
