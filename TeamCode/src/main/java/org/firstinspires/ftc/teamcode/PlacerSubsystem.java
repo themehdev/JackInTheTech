@@ -41,6 +41,9 @@ public class PlacerSubsystem {
 
     public void setGrabbing(boolean grabbing){
         grabbing_ = grabbing;
+        if(!grabbing_){
+            timer_ = Logger.timestamp() + 250_000_000;
+        }
     }
 
     public void runGrabber(){
@@ -64,9 +67,9 @@ public class PlacerSubsystem {
 
         runGrabber();
 
-        if(gp_.leftBumperWasPressed()){
+        if(gp_.squareWasPressed()){
             grabbing_ = !grabbing_;
-            timer_ = Logger.timestamp() + 225_000_000;
+            timer_ = Logger.timestamp() + 250_000_000;
         }
 
         io_.setArmTargetPow(gp_.right_trigger - gp_.left_trigger);
