@@ -27,15 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.autos;
 
 import com.blazedeveloper.chrono.LoggedLinearOpMode;
 import com.blazedeveloper.chrono.Logger;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import kotlin.math.UMathKt;
+import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerSubsystem;
 
 /*
  * This OpMode illustrates the concept of driving a path based on time.

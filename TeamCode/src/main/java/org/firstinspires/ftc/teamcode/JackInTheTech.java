@@ -6,6 +6,15 @@ import com.blazedeveloper.chrono.dataflow.rlog.RLOGServer;
 import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.dumper.DumperIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.dumper.DumperSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerSubsystem;
+
 /*
  * This file contains an example of a Linear "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -39,8 +48,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class JackInTheTech extends LoggedLinearOpMode {
     // Declare OpMode members for each of the 4 motors.
     private DriveBaseSubsystem db_;
-    private IntakeSubsystem intake_;
-    private PlacerSubsystem placer_;
+    private DumperSubsystem dumper_;
 
     public JackInTheTech (){
         Logger.addReceiver(new RLOGServer());
@@ -50,15 +58,13 @@ public class JackInTheTech extends LoggedLinearOpMode {
     public void runLoggedOpMode() {
 
         db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap), gamepad1);
-        intake_ = new IntakeSubsystem(new IntakeIOHardware(hardwareMap), gamepad1);
-        placer_ = new PlacerSubsystem(new PlacerIOHardware(hardwareMap), gamepad1);
+        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), gamepad1);
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         db_.updateLogging();
-        intake_.updateLogging();
-        placer_.updateLogging();
+        dumper_.updateLogging();
 
         waitForStart();
 
@@ -66,8 +72,7 @@ public class JackInTheTech extends LoggedLinearOpMode {
         while (isActive()) {
             preCycle();
             db_.periodicTeleOp();
-            intake_.periodicTeleOp();
-            placer_.periodicTeleOp();
+            dumper_.periodicTeleOp();
             postCycle();
         }
     }
