@@ -29,8 +29,9 @@ public class EventHandlerIOHardware implements EventHandlerIO{
     public void updateInputs(EventHandlerIOInputs inputs){
         inputs.state = state_;
         inputs.timerLength = timerLength_;
-        inputs.timer = timer_.seconds();
         inputs.isDone = timer_.seconds() >= timerLength_;
+        inputs.timer = inputs.isDone ? timerLength_ - timer_.seconds() : 0.0;
+
     }
 
 }
