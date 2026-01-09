@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.subsystems.drivebase;
 import com.blazedeveloper.chrono.Logger;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.RobotState;
+import org.firstinspires.ftc.teamcode.subsystems.eventHandler.EventHandlerSubsystem;
+
 public class DriveBaseSubsystem {
     private DriveBaseIO io_;
 
@@ -10,15 +13,19 @@ public class DriveBaseSubsystem {
 
     private Gamepad gp_;
 
-    public DriveBaseSubsystem (DriveBaseIO io, Gamepad gp){
+    private EventHandlerSubsystem state_;
+
+    public DriveBaseSubsystem (DriveBaseIO io, Gamepad gp, EventHandlerSubsystem state){
         io_ = io;
         gp_ = gp;
 
         inputs_ = new DriveBaseIO.DriveBaseIOInputs();
+
+        state_ = state;
     }
 
     public DriveBaseSubsystem (DriveBaseIOHardware dbHardware){
-        this(dbHardware, null);
+        this(dbHardware, null, null);
     }
 
     public void setDBPowers(double frPow, double flPow, double brPow, double blPow){
@@ -47,36 +54,8 @@ public class DriveBaseSubsystem {
         return inputs_.imuYawRad;
     }
 
-    public void periodicTeleOp(){
-        updateLogging();
-
+    public void setDBPowers(double axial, double lateral, double yaw){
         double max;
-
-        if(gp_.triangle && gp_.circle) {
-            io_.resetYaw();
-            Logger.output("resettingYaw", true);
-        }else{
-            Logger.output("resettingYaw", false);
-        }
-
-        double gpAngleRad = Math.atan2(-gp_.left_stick_y, gp_.left_stick_x);
-
-        Logger.output("gpAngle", gpAngleRad);
-
-        double robotRelativeAngle = gpAngleRad - inputs_.imuYawRad;
-
-        Logger.output("robotRelativeAngle", robotRelativeAngle);
-
-        double robotRelativeX = Math.cos(robotRelativeAngle);
-        double robotRelativeY = Math.sin(robotRelativeAngle);
-
-        double gpMagnitude = Math.sqrt(gp_.left_stick_y * gp_.left_stick_y + gp_.left_stick_x * gp_.left_stick_x);
-
-        Logger.output("gpMagnitude", gpMagnitude);
-        // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-        double axial   = robotRelativeY * gpMagnitude;  // Note: pushing stick forward gives negative value
-        double lateral = - robotRelativeX * gpMagnitude;
-        double yaw     =  gp_.right_stick_x;
 
         Logger.output("axial", axial);
         Logger.output("lateral", lateral);
@@ -126,8 +105,81 @@ public class DriveBaseSubsystem {
 
         // Send calculated power to wheels
         io_.setDBPowers(frontRightPower, frontLeftPower, backLeftPower, backRightPower);
+    }
 
-        // Show the elapsed game time and wheel power.
+    public void periodicTeleOp(){
+        updateLogging();
 
+        switch (state_.getState()) {
+            case Default:
+
+                if (gp_.triangle && gp_.circle) {
+                    io_.resetYaw();
+                    Logger.output("resettingYaw", true);
+                } else {
+                    Logger.output("resettingYaw", false);
+                }
+
+                double gpAngleRad = Math.atan2(-gp_.left_stick_y, gp_.left_stick_x);
+
+                Logger.output("gpAngle", gpAngleRad);
+
+                double robotRelativeAngle = gpAngleRad - inputs_.imuYawRad;
+
+                Logger.output("robotRelativeAngle", robotRelativeAngle);
+
+                double robotRelativeX = Math.cos(robotRelativeAngle);
+                double robotRelativeY = Math.sin(robotRelativeAngle);
+
+                double gpMagnitude = Math.sqrt(gp_.left_stick_y * gp_.left_stick_y + gp_.left_stick_x * gp_.left_stick_x);
+
+                Logger.output("gpMagnitude", gpMagnitude);
+
+                setDBPowers(robotRelativeY * gpMagnitude, -robotRelativeX * gpMagnitude, gp_.right_stick_x);
+
+                // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
+
+
+                // Show the elapsed game time and wheel power.
+                break;
+            case GoingToPlaceBottomForward:
+                setDBPowers(1, 0, 0);
+                if(state_.timerIsDone()){
+                    state_.setState(RobotState.GoingToPlaceBottomSide);
+                    state_.resetTimer(2.5);
+                }
+                break;
+            case GoingToPlaceBottomSide:
+                setDBPowers(0, 1, 0);
+                if(inputs_.dist > 5 || state_.timerIsDone()){
+                    state_.setState(RobotState.PlacingBottom);
+                    setDBPowers(0.0);
+                    state_.resetTimer(1.5);
+                }
+                break;
+            case GoingToPlaceTop:
+                if(state_.timerIsDone()){
+                    state_.setState(RobotState.PlacingTop);
+                    setDBPowers(0.0);
+                    state_.resetTimer(1.5);
+                }
+                setDBPowers(1, 0, 0);
+            case BackingUp:
+                setDBPowers(-1, 0, 0);
+                if(state_.timerIsDone()){
+                    state_.setState(RobotState.Default);
+                    setDBPowers(0.0);
+                }
+                break;
+            case EndgamePark:
+                setDBPowers(1, 0, 0.05);
+                if(inputs_.dist < 10){
+                    state_.setState(RobotState.Done);
+                    setDBPowers(0);
+                }
+                break;
+            default:
+                setDBPowers(0.0);
+        }
     }
 }

@@ -10,10 +10,8 @@ import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseIOHardware;
 import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.dumper.DumperIOHardware;
 import org.firstinspires.ftc.teamcode.subsystems.dumper.DumperSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeIOHardware;
-import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerIOHardware;
-import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.eventHandler.EventHandlerIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.eventHandler.EventHandlerSubsystem;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -47,6 +45,7 @@ import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerSubsystem;
 
 public class JackInTheTech extends LoggedLinearOpMode {
     // Declare OpMode members for each of the 4 motors.
+    private EventHandlerSubsystem state_;
     private DriveBaseSubsystem db_;
     private DumperSubsystem dumper_;
 
@@ -57,8 +56,9 @@ public class JackInTheTech extends LoggedLinearOpMode {
    
     public void runLoggedOpMode() {
 
-        db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap), gamepad1);
-        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), gamepad1);
+        state_ = new EventHandlerSubsystem(new EventHandlerIOHardware(), gamepad1);
+        db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap), gamepad1, state_);
+        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), gamepad1, state_);
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -71,6 +71,7 @@ public class JackInTheTech extends LoggedLinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (isActive()) {
             preCycle();
+            state_.periodicTeleOp();
             db_.periodicTeleOp();
             dumper_.periodicTeleOp();
             postCycle();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.drivebase;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class DriveBaseIOHardware implements DriveBaseIO{
 
@@ -14,6 +16,8 @@ public class DriveBaseIOHardware implements DriveBaseIO{
     private DcMotor fr_;
     private DcMotor bl_;
     private DcMotor br_;
+
+    private Rev2mDistanceSensor dist_;
 
     private IMU imu_;
 
@@ -34,6 +38,8 @@ public class DriveBaseIOHardware implements DriveBaseIO{
         bl_.setDirection(DcMotor.Direction.REVERSE);
         fr_.setDirection(DcMotor.Direction.FORWARD);
         br_.setDirection(DcMotor.Direction.FORWARD);
+
+        dist_ = hardwareMap.get(Rev2mDistanceSensor.class, "dist");
 
         imu_ = hardwareMap.get(IMU.class, "imu");
         imu_.initialize(
@@ -76,6 +82,8 @@ public class DriveBaseIOHardware implements DriveBaseIO{
 
         inputs.frPos = fr_.getCurrentPosition();
         inputs.frPow = fr_.getPower();
+
+        inputs.dist = dist_.getDistance(DistanceUnit.CM);
 
         inputs.imuYawRad = imu_.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         inputs.imuPitchRad = imu_.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS);

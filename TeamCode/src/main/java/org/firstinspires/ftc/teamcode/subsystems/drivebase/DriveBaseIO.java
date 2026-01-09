@@ -23,6 +23,8 @@ public interface DriveBaseIO {
         double brPow = 0.0;
         double blPow = 0.0;
 
+        double dist = 0.0;
+
         double imuYawRad = 0.0;
         double imuPitchRad = 0.0;
         double imuRollRad = 0.0;
@@ -40,6 +42,8 @@ public interface DriveBaseIO {
 
             logTable.put("bl/Pos", blPos);
             logTable.put("bl/Pow", blPow);
+
+            logTable.put("dist", dist);
 
             logTable.put("imuYawRad", imuYawRad);
             logTable.put("imuPitchRad", imuPitchRad);
@@ -59,6 +63,8 @@ public interface DriveBaseIO {
 
             blPos = logTable.get("bl/Pos", blPos);
             blPow = logTable.get("bl/Pow", blPow);
+
+            dist = logTable.get("dist", dist);
 
             imuYawRad = logTable.get("imuYawRad", imuYawRad);
             imuPitchRad = logTable.get("imuPitchRad", imuPitchRad);
