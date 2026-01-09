@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.autos.old;
 
 import com.blazedeveloper.chrono.LoggedLinearOpMode;
 import com.blazedeveloper.chrono.Logger;

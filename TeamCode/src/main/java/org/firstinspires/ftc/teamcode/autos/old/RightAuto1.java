@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.autos.old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-public class LeftAuto1 extends AutoWTime{
+public class RightAuto1 extends AutoWTime{
 
-    public LeftAuto1(){
-        super(39.8);
+    public RightAuto1(){
+        super(-39.8);
     }
 
     @Override
