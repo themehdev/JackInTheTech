@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.drivebase;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -19,17 +20,17 @@ public class DriveBaseIOHardware implements DriveBaseIO{
     private double yawRad;
 
     public DriveBaseIOHardware (HardwareMap hardwareMap){
-        fl_ = hardwareMap.get(DcMotor.class, "front_left_drive");
-        bl_ = hardwareMap.get(DcMotor.class, "back_left_drive");
-        fr_ = hardwareMap.get(DcMotor.class, "front_right_drive");
-        br_ = hardwareMap.get(DcMotor.class, "back_right_drive");
+        fl_ = hardwareMap.get(DcMotor.class, "fl");
+        bl_ = hardwareMap.get(DcMotor.class, "bl");
+        fr_ = hardwareMap.get(DcMotor.class, "fr");
+        br_ = hardwareMap.get(DcMotor.class, "br");
 
         fl_.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl_.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr_.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br_.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        fl_.setDirection(DcMotor.Direction.FORWARD);
+        fl_.setDirection(DcMotor.Direction.REVERSE);
         bl_.setDirection(DcMotor.Direction.REVERSE);
         fr_.setDirection(DcMotor.Direction.FORWARD);
         br_.setDirection(DcMotor.Direction.FORWARD);

@@ -75,7 +75,7 @@ public class DriveBaseSubsystem {
         Logger.output("gpMagnitude", gpMagnitude);
         // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
         double axial   = robotRelativeY * gpMagnitude;  // Note: pushing stick forward gives negative value
-        double lateral = robotRelativeX * gpMagnitude;
+        double lateral = - robotRelativeX * gpMagnitude;
         double yaw     =  gp_.right_stick_x;
 
         Logger.output("axial", axial);
