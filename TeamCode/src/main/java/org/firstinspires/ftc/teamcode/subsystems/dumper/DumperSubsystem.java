@@ -24,6 +24,10 @@ public class DumperSubsystem {
 
     }
 
+    public void setPower(double pow){
+        io_.setPow(pow);
+    }
+
     public void updateLogging(){
         io_.updateInputs(inputs_);
         Logger.processInputs("dumper", inputs_);

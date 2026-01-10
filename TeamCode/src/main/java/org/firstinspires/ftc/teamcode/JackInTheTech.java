@@ -65,6 +65,7 @@ public class JackInTheTech extends LoggedLinearOpMode {
 
         db_.updateLogging();
         dumper_.updateLogging();
+        state_.updateLogging();
 
         waitForStart();
 

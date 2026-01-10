@@ -36,6 +36,8 @@ import com.blazedeveloper.chrono.dataflow.rlog.RLOGWriter;
 
 import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseIOHardware;
 import org.firstinspires.ftc.teamcode.subsystems.drivebase.DriveBaseSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.dumper.DumperIOHardware;
+import org.firstinspires.ftc.teamcode.subsystems.dumper.DumperSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerIOHardware;
 import org.firstinspires.ftc.teamcode.subsystems.placer.PlacerSubsystem;
 
@@ -64,7 +66,7 @@ public class AutoWTime extends LoggedLinearOpMode {
     /* Declare OpMode members. */
     private DriveBaseSubsystem db_;
 
-    private PlacerSubsystem placer_;
+    private DumperSubsystem dumper_;
 
     private double startingTurnAngle_;
     
@@ -80,7 +82,7 @@ public class AutoWTime extends LoggedLinearOpMode {
     public void runLoggedOpMode() {
 
         db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap));
-        placer_ = new PlacerSubsystem(new PlacerIOHardware(hardwareMap));
+        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), null, null);
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -91,7 +93,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         telemetry.update();
 
         db_.updateLogging();
-        placer_.updateLogging();
+        dumper_.updateLogging();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -99,16 +101,14 @@ public class AutoWTime extends LoggedLinearOpMode {
         // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
         preCycle();
         db_.updateLogging();
-        placer_.updateLogging();
+        dumper_.updateLogging();
         double turnPower = startingTurnAngle_ > 0 ? -0.5 : 0.5;
         db_.setDBPowers(turnPower, -turnPower);
-        placer_.setGrabbing(true);
         postCycle();
         while(isActive() && Math.abs(db_.getIMU()) < Math.abs(startingTurnAngle_ * Math.PI/180)){
             preCycle();
             db_.updateLogging();
-            placer_.updateLogging();
-            placer_.runGrabber();
+            dumper_.updateLogging();
             telemetry.addData("Path", "Turning: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
@@ -116,23 +116,21 @@ public class AutoWTime extends LoggedLinearOpMode {
         preCycle();
         db_.setDBPowers(0);
         db_.updateLogging();
-        placer_.updateLogging();
+        dumper_.updateLogging();
         postCycle();
 
         sleep(250);
         
         preCycle();
         db_.updateLogging();
-        placer_.updateLogging();
-        db_.setDBPowers(-0.5);
-        placer_.setArmTargetVel(0);
+        dumper_.updateLogging();
+        db_.setDBPowers(0.5);
         resetRuntime();
         postCycle();
         while (isActive() && (getRuntime() < 2.1)) {
             preCycle();
             db_.updateLogging();
-            placer_.updateLogging();
-            placer_.runGrabber();
+            dumper_.updateLogging();
             telemetry.addData("Path", "Forward: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
@@ -141,43 +139,38 @@ public class AutoWTime extends LoggedLinearOpMode {
 
         preCycle();
         db_.updateLogging();
-        placer_.updateLogging();
+        dumper_.updateLogging();
         db_.stop();
-        placer_.setArmTargetVel(1);
+        dumper_.setPower(1.0);
         resetRuntime();
         postCycle();
-        while (isActive() && getRuntime() < 4.5) {
+        while (isActive() && getRuntime() < 1.5) {
             preCycle();
             db_.updateLogging();
-            placer_.updateLogging();
-            placer_.runGrabber();
+            dumper_.updateLogging();
             telemetry.addData("Path", "Placing: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }
         preCycle();
-        placer_.setGrabbing(false);
-        placer_.runGrabber();
-        placer_.updateLogging();
+        dumper_.updateLogging();
         resetRuntime();
         postCycle();
         while (isActive() && getRuntime() < 0.5){
             preCycle();
             db_.updateLogging();
-            placer_.updateLogging();
-            placer_.runGrabber();
+            dumper_.updateLogging();
             telemetry.addData("Path", "Releasing: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
         }
 
-        placer_.setArmTargetVel(-1);
         db_.setDBPowers(0.5);
         resetRuntime();
         while (isActive() && (getRuntime() < 2)) {
             preCycle();
             db_.updateLogging();
-            placer_.runGrabber();
+            dumper_.updateLogging();
             telemetry.addData("Path", "Back: %4.1f S Elapsed", getRuntime());
             telemetry.update();
             postCycle();
@@ -205,13 +198,14 @@ public class AutoWTime extends LoggedLinearOpMode {
         preCycle();
         db_.stop();
         db_.updateLogging();
-
+        dumper_.updateLogging();
         telemetry.addData("Path", "Complete");
         telemetry.update();
         postCycle();
         sleep(1000);
         preCycle();
         db_.updateLogging();
+        dumper_.updateLogging();
         postCycle();
     }
 }
