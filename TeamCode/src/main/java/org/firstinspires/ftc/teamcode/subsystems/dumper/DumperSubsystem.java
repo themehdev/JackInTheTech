@@ -12,15 +12,12 @@ public class DumperSubsystem {
     private Gamepad gp_;
     private DumperIO io_;
 
-    private EventHandlerSubsystem state_;
-
     private DumperIO.DumperIOInputs inputs_;
 
-    public DumperSubsystem(DumperIO io, Gamepad gp, EventHandlerSubsystem state){
+    public DumperSubsystem(DumperIO io, Gamepad gp){
         io_ = io;
         gp_ = gp;
         inputs_ = new DumperIO.DumperIOInputs();
-        state_ = state;
 
     }
 
@@ -35,20 +32,20 @@ public class DumperSubsystem {
 
     public void periodicTeleOp(){
         updateLogging();
-        switch (state_.getState()) {
+        switch (EventHandlerSubsystem.getState()) {
             case Default:
                 io_.setPow(gp_.right_trigger - gp_.left_trigger);
                 break;
             case PlacingTop:
                 io_.setPow(1.0);
-                if(state_.timerIsDone()){
-                    state_.setState(RobotState.BackingUp);
+                if(EventHandlerSubsystem.timerIsDone()){
+                    EventHandlerSubsystem.setState(RobotState.BackingUp);
                     io_.setPow(0.0);
                 }
             case PlacingBottom:
                 io_.setPow(-1.0);
-                if(state_.timerIsDone()){
-                    state_.setState(RobotState.BackingUp);
+                if(EventHandlerSubsystem.timerIsDone()){
+                    EventHandlerSubsystem.setState(RobotState.BackingUp);
                     io_.setPow(0.0);
                 }
             default:

@@ -44,8 +44,7 @@ import org.firstinspires.ftc.teamcode.subsystems.eventHandler.EventHandlerSubsys
 @TeleOp
 
 public class JackInTheTech extends LoggedLinearOpMode {
-    // Declare OpMode members for each of the 4 motors.
-    private EventHandlerSubsystem state_;
+    // Declare OpMode members for each of the 4 motors
     private DriveBaseSubsystem db_;
     private DumperSubsystem dumper_;
 
@@ -56,23 +55,23 @@ public class JackInTheTech extends LoggedLinearOpMode {
    
     public void runLoggedOpMode() {
 
-        state_ = new EventHandlerSubsystem(new EventHandlerIOHardware(), gamepad1);
-        db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap), gamepad1, state_);
-        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), gamepad1, state_);
+        EventHandlerSubsystem.setup(new EventHandlerIOHardware(), gamepad1);
+        db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap), gamepad1);
+        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), gamepad1);
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         db_.updateLogging();
         dumper_.updateLogging();
-        state_.updateLogging();
+        EventHandlerSubsystem.updateLogging();
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (isActive()) {
             preCycle();
-            state_.periodicTeleOp();
+            EventHandlerSubsystem.periodicTeleOp();
             db_.periodicTeleOp();
             dumper_.periodicTeleOp();
             postCycle();

@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.RobotState;
 
-public class EventHandlerSubsystem{
+public final class EventHandlerSubsystem{
 
-    private EventHandlerIO io_;
+    private static EventHandlerIO io_;
 
-    private EventHandlerIO.EventHandlerIOInputs inputs_;
+    private static EventHandlerIO.EventHandlerIOInputs inputs_;
 
-    private Gamepad gp_;
+    private static Gamepad gp_;
 
     public EventHandlerSubsystem(EventHandlerIO io, Gamepad gp){
         io_ = io;
@@ -19,29 +19,35 @@ public class EventHandlerSubsystem{
         inputs_ = new EventHandlerIO.EventHandlerIOInputs();
     }
 
-    public RobotState getState(){
+    public static void setup(EventHandlerIO io, Gamepad gp){
+        io_ = io;
+        gp_ = gp;
+        inputs_ = new EventHandlerIO.EventHandlerIOInputs();
+    }
+
+    public static RobotState getState(){
         return inputs_.state;
     }
 
-    public void setState(RobotState state){
+    public static void setState(RobotState state){
         io_.setState(state);
     }
 
-    public void resetTimer(double seconds){
+    public static void resetTimer(double seconds){
         io_.resetTimer(seconds);
     }
 
-    public boolean timerIsDone(){
+    public static boolean timerIsDone(){
         return inputs_.isDone;
     }
 
-    public void updateLogging(){
+    public static void updateLogging(){
         io_.updateInputs(inputs_);
 
         Logger.processInputs("EventHandler", inputs_);
     }
 
-    public void periodicTeleOp(){
+    public static void periodicTeleOp(){
         updateLogging();
         if(gp_.leftBumperWasPressed() && inputs_.state.equals(RobotState.Default)){
             inputs_.state = RobotState.GoingToPlaceTop;

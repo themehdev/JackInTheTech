@@ -13,19 +13,15 @@ public class DriveBaseSubsystem {
 
     private Gamepad gp_;
 
-    private EventHandlerSubsystem state_;
-
-    public DriveBaseSubsystem (DriveBaseIO io, Gamepad gp, EventHandlerSubsystem state){
+    public DriveBaseSubsystem (DriveBaseIO io, Gamepad gp){
         io_ = io;
         gp_ = gp;
 
         inputs_ = new DriveBaseIO.DriveBaseIOInputs();
-
-        state_ = state;
     }
 
     public DriveBaseSubsystem (DriveBaseIOHardware dbHardware){
-        this(dbHardware, null, null);
+        this(dbHardware, null);
     }
 
     public void setDBPowers(double frPow, double flPow, double brPow, double blPow){
@@ -110,7 +106,7 @@ public class DriveBaseSubsystem {
     public void periodicTeleOp(){
         updateLogging();
 
-        switch (state_.getState()) {
+        switch (EventHandlerSubsystem.getState()) {
             case Default:
 
                 if (gp_.triangle && gp_.circle) {
@@ -144,37 +140,37 @@ public class DriveBaseSubsystem {
                 break;
             case GoingToPlaceBottomForward:
                 setDBPowers(1, 0, 0);
-                if(state_.timerIsDone()){
-                    state_.setState(RobotState.GoingToPlaceBottomSide);
-                    state_.resetTimer(2.5);
+                if(EventHandlerSubsystem.timerIsDone()){
+                    EventHandlerSubsystem.setState(RobotState.GoingToPlaceBottomSide);
+                    EventHandlerSubsystem.resetTimer(2.5);
                 }
                 break;
             case GoingToPlaceBottomSide:
                 setDBPowers(0, 1, 0);
-                if(inputs_.dist > 5 || state_.timerIsDone()){
-                    state_.setState(RobotState.PlacingBottom);
+                if(inputs_.dist > 5 || EventHandlerSubsystem.timerIsDone()){
+                    EventHandlerSubsystem.setState(RobotState.PlacingBottom);
                     setDBPowers(0.0);
-                    state_.resetTimer(1.5);
+                    EventHandlerSubsystem.resetTimer(1.5);
                 }
                 break;
             case GoingToPlaceTop:
-                if(state_.timerIsDone()){
-                    state_.setState(RobotState.PlacingTop);
+                if(EventHandlerSubsystem.timerIsDone()){
+                    EventHandlerSubsystem.setState(RobotState.PlacingTop);
                     setDBPowers(0.0);
-                    state_.resetTimer(1.5);
+                    EventHandlerSubsystem.resetTimer(1.5);
                 }
                 setDBPowers(1, 0, 0);
             case BackingUp:
                 setDBPowers(-1, 0, 0);
-                if(state_.timerIsDone()){
-                    state_.setState(RobotState.Default);
+                if(EventHandlerSubsystem.timerIsDone()){
+                    EventHandlerSubsystem.setState(RobotState.Default);
                     setDBPowers(0.0);
                 }
                 break;
             case EndgamePark:
                 setDBPowers(1, 0, 0.05);
                 if(inputs_.dist < 10){
-                    state_.setState(RobotState.Done);
+                    EventHandlerSubsystem.setState(RobotState.Done);
                     setDBPowers(0);
                 }
                 break;
