@@ -82,7 +82,7 @@ public class AutoWTime extends LoggedLinearOpMode {
     public void runLoggedOpMode() {
 
         db_ = new DriveBaseSubsystem(new DriveBaseIOHardware(hardwareMap));
-        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), null, null);
+        dumper_ = new DumperSubsystem(new DumperIOHardware(hardwareMap), null);
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.

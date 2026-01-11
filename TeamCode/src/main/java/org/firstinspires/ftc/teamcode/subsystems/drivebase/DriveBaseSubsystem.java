@@ -139,36 +139,36 @@ public class DriveBaseSubsystem {
                 // Show the elapsed game time and wheel power.
                 break;
             case GoingToPlaceBottomForward:
-                setDBPowers(1, 0, 0);
-                if(EventHandlerSubsystem.timerIsDone()){
+                setDBPowers(-1, 0, 0);
+                if(inputs_.dist < 3.0 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.GoingToPlaceBottomSide);
-                    EventHandlerSubsystem.resetTimer(2.5);
+                    EventHandlerSubsystem.resetTimer(1.0);
                 }
                 break;
             case GoingToPlaceBottomSide:
-                setDBPowers(0, 1, 0);
-                if(inputs_.dist > 5 || EventHandlerSubsystem.timerIsDone()){
+                setDBPowers(0, -1, 0);
+                if(inputs_.dist > 5.0 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.PlacingBottom);
                     setDBPowers(0.0);
                     EventHandlerSubsystem.resetTimer(1.5);
                 }
                 break;
             case GoingToPlaceTop:
-                if(EventHandlerSubsystem.timerIsDone()){
+                setDBPowers(-1, 0, 0);
+                if(inputs_.dist < 3.0 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.PlacingTop);
                     setDBPowers(0.0);
                     EventHandlerSubsystem.resetTimer(1.5);
                 }
-                setDBPowers(1, 0, 0);
             case BackingUp:
-                setDBPowers(-1, 0, 0);
+                setDBPowers(1, 0, 0);
                 if(EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.Default);
                     setDBPowers(0.0);
                 }
                 break;
             case EndgamePark:
-                setDBPowers(1, 0, 0.05);
+                setDBPowers(-1, 0, 0.05);
                 if(inputs_.dist < 10){
                     EventHandlerSubsystem.setState(RobotState.Done);
                     setDBPowers(0);

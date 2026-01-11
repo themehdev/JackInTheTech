@@ -41,15 +41,19 @@ public class DumperSubsystem {
                 if(EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.BackingUp);
                     io_.setPow(0.0);
+                    EventHandlerSubsystem.resetTimer(1.0);
                 }
+                break;
             case PlacingBottom:
                 io_.setPow(-1.0);
                 if(EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.BackingUp);
                     io_.setPow(0.0);
                 }
+                break;
             default:
                 io_.setPow(0.0);
+                break;
         }
     }
 }

@@ -50,16 +50,16 @@ public final class EventHandlerSubsystem{
     public static void periodicTeleOp(){
         updateLogging();
         if(gp_.leftBumperWasPressed() && inputs_.state.equals(RobotState.Default)){
-            inputs_.state = RobotState.GoingToPlaceTop;
-            resetTimer(2.0);
+            setState(RobotState.GoingToPlaceTop);
+            resetTimer(1.0);
         }
         if(gp_.rightBumperWasPressed() && inputs_.state.equals(RobotState.Default)){
-            inputs_.state = RobotState.GoingToPlaceBottomForward;
-            resetTimer(2.0);
+            setState(RobotState.GoingToPlaceBottomForward);
+            resetTimer(1.0);
         }
         if(gp_.squareWasPressed() && inputs_.state.equals(RobotState.Default)){
-            inputs_.state = RobotState.EndgamePark;
-            resetTimer(2.5);
+            setState(RobotState.EndgamePark);
+            resetTimer(2.0);
         }
     }
 
