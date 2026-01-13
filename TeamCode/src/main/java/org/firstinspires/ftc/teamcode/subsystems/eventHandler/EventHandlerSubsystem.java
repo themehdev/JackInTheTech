@@ -49,11 +49,11 @@ public final class EventHandlerSubsystem{
 
     public static void periodicTeleOp(){
         updateLogging();
-        if(gp_.leftBumperWasPressed() && inputs_.state.equals(RobotState.Default)){
+        if(gp_.rightBumperWasPressed() && inputs_.state.equals(RobotState.Default)){
             setState(RobotState.GoingToPlaceTop);
             resetTimer(1.0);
         }
-        if(gp_.rightBumperWasPressed() && inputs_.state.equals(RobotState.Default)){
+        if(gp_.leftBumperWasPressed() && inputs_.state.equals(RobotState.Default)){
             setState(RobotState.GoingToPlaceBottomForward);
             resetTimer(1.0);
         }

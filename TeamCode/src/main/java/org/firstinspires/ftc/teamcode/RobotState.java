@@ -8,7 +8,6 @@ public enum RobotState {
     PlacingBottom,
     PlacingTop,
     BackingUp,
-    EndgamePark,
-    Done
+    EndgamePark
 
 }

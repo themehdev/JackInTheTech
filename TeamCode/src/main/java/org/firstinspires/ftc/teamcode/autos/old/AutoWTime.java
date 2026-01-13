@@ -102,24 +102,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         preCycle();
         db_.updateLogging();
         dumper_.updateLogging();
-        double turnPower = startingTurnAngle_ > 0 ? -0.5 : 0.5;
-        db_.setDBPowers(turnPower, -turnPower);
         postCycle();
-        while(isActive() && Math.abs(db_.getIMU()) < Math.abs(startingTurnAngle_ * Math.PI/180)){
-            preCycle();
-            db_.updateLogging();
-            dumper_.updateLogging();
-            telemetry.addData("Path", "Turning: %4.1f S Elapsed", getRuntime());
-            telemetry.update();
-            postCycle();
-        }
-        preCycle();
-        db_.setDBPowers(0);
-        db_.updateLogging();
-        dumper_.updateLogging();
-        postCycle();
-
-        sleep(250);
         
         preCycle();
         db_.updateLogging();
@@ -127,7 +110,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         db_.setDBPowers(0.5);
         resetRuntime();
         postCycle();
-        while (isActive() && (getRuntime() < 2.1)) {
+        while (isActive() && db_.getDist() > 20) {
             preCycle();
             db_.updateLogging();
             dumper_.updateLogging();
@@ -141,7 +124,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         db_.updateLogging();
         dumper_.updateLogging();
         db_.stop();
-        dumper_.setPower(1.0);
+        dumper_.setPower(-1.0);
         resetRuntime();
         postCycle();
         while (isActive() && getRuntime() < 1.5) {
@@ -152,22 +135,10 @@ public class AutoWTime extends LoggedLinearOpMode {
             telemetry.update();
             postCycle();
         }
-        preCycle();
-        dumper_.updateLogging();
-        resetRuntime();
-        postCycle();
-        while (isActive() && getRuntime() < 0.5){
-            preCycle();
-            db_.updateLogging();
-            dumper_.updateLogging();
-            telemetry.addData("Path", "Releasing: %4.1f S Elapsed", getRuntime());
-            telemetry.update();
-            postCycle();
-        }
 
-        db_.setDBPowers(0.5);
+        db_.setDBPowers(-0.5);
         resetRuntime();
-        while (isActive() && (getRuntime() < 2)) {
+        while (isActive() && (getRuntime() < 1)) {
             preCycle();
             db_.updateLogging();
             dumper_.updateLogging();
