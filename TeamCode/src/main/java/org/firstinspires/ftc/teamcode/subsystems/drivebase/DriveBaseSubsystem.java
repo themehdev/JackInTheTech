@@ -144,14 +144,14 @@ public class DriveBaseSubsystem {
                 break;
             case GoingToPlaceBottomForward:
                 setDBPowers(1, 0, 0);
-                if(inputs_.dist < 3.0 || EventHandlerSubsystem.timerIsDone()){
+                if(inputs_.dist < 15.0 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.GoingToPlaceBottomSide);
                     EventHandlerSubsystem.resetTimer(1.0);
                 }
                 break;
             case GoingToPlaceBottomSide:
-                setDBPowers(0, -1, 0);
-                if(inputs_.dist > 15.0 || EventHandlerSubsystem.timerIsDone()){
+                setDBPowers(0, -0.3, 0);
+                if(inputs_.dist > 18.0 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.PlacingBottom);
                     setDBPowers(0.0);
                     EventHandlerSubsystem.resetTimer(1.5);
@@ -159,7 +159,7 @@ public class DriveBaseSubsystem {
                 break;
             case GoingToPlaceTop:
                 setDBPowers(1, 0, 0);
-                if(inputs_.dist < 8.0 || EventHandlerSubsystem.timerIsDone()){
+                if(inputs_.dist < 8 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.PlacingTop);
                     setDBPowers(0.0);
                     EventHandlerSubsystem.resetTimer(1.5);
