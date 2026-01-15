@@ -143,8 +143,15 @@ public class DriveBaseSubsystem {
                 // Show the elapsed game time and wheel power.
                 break;
             case GoingToPlaceBottomForward:
-                setDBPowers(1, 0, 0);
-                if(inputs_.dist < 15.0 || EventHandlerSubsystem.timerIsDone()){
+
+                if(inputs_.dist < 60.0){
+                    setDBPowers(0.3);
+                    Logger.output("slowing", true);
+                }else{
+                    setDBPowers(0.6);
+                    Logger.output("slowing", false);
+                }
+                if(inputs_.dist < 10.0 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.GoingToPlaceBottomSide);
                     EventHandlerSubsystem.resetTimer(1.0);
                 }
@@ -158,8 +165,14 @@ public class DriveBaseSubsystem {
                 }
                 break;
             case GoingToPlaceTop:
-                setDBPowers(1, 0, 0);
-                if(inputs_.dist < 8 || EventHandlerSubsystem.timerIsDone()){
+                if(inputs_.dist < 60.0){
+                    setDBPowers(0.3);
+                    Logger.output("slowing", true);
+                }else{
+                    setDBPowers(0.6);
+                    Logger.output("slowing", false);
+                }
+                if(inputs_.dist < 4 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.PlacingTop);
                     setDBPowers(0.0);
                     EventHandlerSubsystem.resetTimer(1.5);
