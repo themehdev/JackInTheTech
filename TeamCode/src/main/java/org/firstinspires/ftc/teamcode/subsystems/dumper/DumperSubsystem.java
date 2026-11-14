@@ -34,7 +34,7 @@ public class DumperSubsystem {
         updateLogging();
         switch (EventHandlerSubsystem.getState()) {
             case Default:
-                io_.setPow((gp_.right_trigger - gp_.left_trigger)*0.75);
+                io_.setPow((gp_.right_trigger - gp_.left_trigger)*0.4);
                 break;
             case PlacingTop:
                 io_.setPow(1.0);
@@ -45,7 +45,7 @@ public class DumperSubsystem {
                 }
                 break;
             case PlacingBottom:
-                io_.setPow(-1.0);
+                io_.setPow(-0.5);
                 if(EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.BackingUp);
                     io_.setPow(0.0);
