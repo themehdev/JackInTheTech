@@ -161,7 +161,7 @@ public class DriveBaseSubsystem {
                 if(inputs_.dist > 18.0 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.PlacingBottom);
                     setDBPowers(0.0);
-                    EventHandlerSubsystem.resetTimer(1.5);
+                    EventHandlerSubsystem.resetTimer(1.0);
                 }
                 break;
             case GoingToPlaceTop:
@@ -175,7 +175,7 @@ public class DriveBaseSubsystem {
                 if(inputs_.dist < 4 || EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.PlacingTop);
                     setDBPowers(0.0);
-                    EventHandlerSubsystem.resetTimer(1.5);
+                    EventHandlerSubsystem.resetTimer(1.0);
                 }
                 break;
             case BackingUp:

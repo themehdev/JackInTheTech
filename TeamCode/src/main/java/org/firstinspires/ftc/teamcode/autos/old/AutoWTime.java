@@ -124,7 +124,7 @@ public class AutoWTime extends LoggedLinearOpMode {
         db_.updateLogging();
         dumper_.updateLogging();
         db_.stop();
-        dumper_.setPower(-1.0);
+        dumper_.setPower(-0.75);
         resetRuntime();
         postCycle();
         while (isActive() && getRuntime() < 1.5) {

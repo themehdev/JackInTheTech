@@ -45,7 +45,7 @@ public class DumperSubsystem {
                 }
                 break;
             case PlacingBottom:
-                io_.setPow(-0.5);
+                io_.setPow(-0.75);
                 if(EventHandlerSubsystem.timerIsDone()){
                     EventHandlerSubsystem.setState(RobotState.BackingUp);
                     io_.setPow(0.0);
